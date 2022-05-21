@@ -47,24 +47,6 @@ CREATE PROCEDURE SP_InsertMuni(
             VALUES(DepId, MuniName);
     END;
 
-CREATE TABLE Direccion(
-    IdDireccion INT,
-    IdUsuario INT NOT NULL,
-    IdMunicipio INT NOT NULL,
-    zona TINYINT,
-    avenida VARCHAR(50) NOT NULL,
-    calle VARCHAR(50) NOT NULL,
-    PRIMARY KEY(IdDireccion),
-    FOREIGN KEY (IdUsuario) REFERENCES Usuario(IdUsuario),
-    FOREIGN KEY (IdMunicipio) REFERENCES Municipio(IdMuni)
-);
-
-CREATE PROCEDURE SP_GetDireccion(IN UserId INT)
-BEGIN
-    SELECT iddireccion, idusuario, idmunicipio,
-           zona, avenida, calle  FROM Direccion d WHERE IdUsuario = UserId;
-END;
-
 CREATE TABLE Roles(
     IdRol INT AUTO_INCREMENT,
     Nombre VARCHAR(100) NOT NULL,
@@ -96,6 +78,37 @@ CREATE TABLE Usuario(
     UNIQUE(Dpi),
     FOREIGN KEY (IdRol) REFERENCES Roles(IdRol)
 );
+
+
+CREATE TABLE Direccion(
+    IdDireccion INT,
+    IdUsuario INT NOT NULL,
+    IdMunicipio INT NOT NULL,
+    Zona INT,
+    Avenida VARCHAR(255) NOT NULL,
+    Calle VARCHAR(255) NOT NULL,
+    PRIMARY KEY(IdDireccion),
+    FOREIGN KEY (IdUsuario) REFERENCES Usuario(IdUsuario),
+    FOREIGN KEY (IdMunicipio) REFERENCES Municipio(IdMuni)
+);
+
+CREATE PROCEDURE SP_GetDireccion(IN UserId INT)
+BEGIN
+    SELECT IdDireccion, IdUsuario, IdMunicipio, Zona, Avenida, Calle  FROM Direccion d WHERE IdUsuario = UserId;
+END;
+
+CREATE PROCEDURE SP_InsertDireccion(
+IN UsuarioId INT,
+IN Muni INT,
+IN Zon INT,
+IN Ave VARCHAR(255),
+IN Cal VARCHAR(255)
+)
+BEGIN
+    INSERT INTO Direccion (IdUsuario, IdMunicipio, Zona, Avenida, Calle)
+        VALUES(UsuarioId, Muni, Zon, Ave, Cal);
+END;
+
 
 CREATE PROCEDURE SP_InsertUsuario(
 IN Rol INT,
@@ -176,33 +189,7 @@ BEGIN
         VALUES(IdDirecc, IdEstatu, NOW());
 END;
 
-CREATE TABLE CarritoUsuario(
-    IdUsuario INT NOT NULL,
-    IdCelular INT NOT NULL,
-    Cantidad MEDIUMINT,
-    PRIMARY KEY(IdUsuario, IdCelular),
-    FOREIGN KEY(IdUsuario)
-        REFERENCES Usuario(IdUsuario),
-    FOREIGN KEY(IdCelular) REFERENCES Celular(IdCelular)
-);
 
-CREATE PROCEDURE SP_CarritoUsuario(
-IN IdCelu INT,
-IN Cant INT,
-IN UsuarioId INT,
-)
-BEGIN
-    INSERT INTO CarritoUsuario(IdCelular, Cantidad, IdUsuario)
-        VALUES(IdCelu, Cant, UsuarioId);
-END;
-
-CREATE PROCEDURE SP_GetCarrito(
-IN UsuarioId INT
-)
-BEGIN
-    SELECT IdUsuario,IdCelular,Cantidad FROM
-        CarritoUsuario WHERE IdUsuario = UsuarioId;
-END;
 
 CREATE TABLE Celular(
     IdCelular INT AUTO_INCREMENT,
@@ -237,6 +224,42 @@ BEGIN
     UPDATE Celular SET Cantidad = Cant WHERE IdCelular = IdCel;
 END;
 
+CREATE PROCEDURE SP_GetCelularDet(IN IdCel INT)
+BEGIN
+    SELECT * FROM Celular WHERE IdCelular = IdCel;
+END;
+
+CREATE TABLE CarritoUsuario(
+    IdUsuario INT NOT NULL,
+    IdCelular INT NOT NULL,
+    Cantidad MEDIUMINT,
+    PRIMARY KEY(IdUsuario, IdCelular),
+    FOREIGN KEY(IdUsuario)
+        REFERENCES Usuario(IdUsuario),
+    FOREIGN KEY(IdCelular) REFERENCES Celular(IdCelular)
+);
+
+CREATE PROCEDURE SP_InsertCarritoUsuario(
+IN IdCelu INT,
+IN Cant INT,
+IN UsuarioId INT
+)
+BEGIN
+    INSERT INTO CarritoUsuario(IdCelular, Cantidad, IdUsuario)
+        VALUES(IdCelu, Cant, UsuarioId);
+END;
+
+CREATE PROCEDURE SP_GetCarrito(
+IN UsuarioId INT
+)
+BEGIN
+    SELECT IdUsuario, CA.IdCelular, CA.Cantidad, C.Imagen, C.Modelo FROM
+        CarritoUsuario CA
+        INNER JOIN Celular C
+        WHERE IdUsuario = UsuarioId;
+END;
+
+
 CREATE TABLE Pago(
     IdPago INT AUTO_INCREMENT,
     NumTarjeta VARCHAR(255) NOT NULL,
@@ -247,7 +270,7 @@ CREATE TABLE Pago(
 
 CREATE PROCEDURE SP_InsertPago(IN NumTarj VARCHAR(255), IN Tot DECIMAL(10, 2))
 BEGIN
-    INSERT INTO Pago(NumTarjeta, Total) VALUES(MD5(NumTarj, Tot));
+    INSERT INTO Pago(NumTarjeta, Total) VALUES(NumTarjeta, Tot);
 END;
 
 CREATE PROCEDURE SP_GetPago(IN PagoId INT)
@@ -278,12 +301,12 @@ IN NombreCli VARCHAR(200)
 )
 BEGIN
     INSERT INTO Factura(IdUsuario, IdPago, IdPedido, Nit, NombreCliente)
-        VALUES(UsuarioId, PagoId, PedidoId, NitN, NombreCli)
+        VALUES(UsuarioId, PagoId, PedidoId, NitN, NombreCli);
 END;
 
 CREATE PROCEDURE SP_GetFacturas(IN UsuarioId INT)
 BEGIN
-    SELECT * FROM Factura WHERE UsuarioId;
+    SELECT IdFactura, IdUsuario, IdPago, IdPedido, Nit, NombreCliente, FechaEmision FROM Factura WHERE IdUsuario = UsuarioId;
 END;
 
 CREATE TABLE FilaFactura(
@@ -310,7 +333,7 @@ END;
 
 CREATE PROCEDURE SP_GetFilaFactura(IN FacturaId INT)
 BEGIN
-    SELECT F.IdFactura, C.descripcion, C.NumSerie, C.Modelo FROM FilaFactura F
+    SELECT F.IdFactura, C.Descripcion, C.NumSerie, C.Modelo FROM FilaFactura F
     INNER JOIN Celular C ON F.IdCelular = C.IdCelular
     WHERE F.IdFactura = FacturaId;
 END;|
