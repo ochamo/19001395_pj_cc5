@@ -9,7 +9,7 @@ namespace BillingReport
     public class BillingArgs
     {
         public int BillingId { get; set; }
-
+        public string ClientEmail { get; set; }
         public string ClientBillingName { get; set; }
         public string ClientBillingId { get; set; }
 
@@ -19,9 +19,10 @@ namespace BillingReport
 
         public decimal TotalPurchase { get; set; }
 
-        public BillingArgs(int billingId, string clientBillingName, string clientBillingId, string deliveryAddress, List<BillingItemModel> billingItemModels, decimal totalPurchase)
+        public BillingArgs(int billingId, string clientEmail, string clientBillingName, string clientBillingId, string deliveryAddress, List<BillingItemModel> billingItemModels, decimal totalPurchase)
         {
             BillingId = billingId;
+            ClientEmail = clientEmail;
             ClientBillingName = clientBillingName;
             ClientBillingId = clientBillingId;
             DeliveryAddress = deliveryAddress;
