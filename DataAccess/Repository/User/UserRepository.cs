@@ -19,7 +19,7 @@ namespace DataAccess.Repository.User
             this.Db = dataAccess;
         }
 
-        public Task<int> CreateUser(CreateUserDTO userDto) => Db.SaveData(Procedures.InsertUser, userDto);
+        public Task<int> CreateUser(CreateUserDTO userDto) => Db.SaveData(Procedures.CreateUser, userDto);
 
         public async Task<LoginModel> Login(LoginDTO loginDto)
         {

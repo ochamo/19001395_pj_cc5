@@ -5,7 +5,7 @@ namespace Domain.Repository
 {
     public interface IAddressRepository
     {
-        public Task<IEnumerable<AddressModel>> GetAddresses(GetAddressDto getAddressDto);
+        public Task<List<AddressModel>> GetAddresses(GetAddressDto getAddressDto);
 
         public Task InsertAddress(CreateAddressDto addressDto); 
 

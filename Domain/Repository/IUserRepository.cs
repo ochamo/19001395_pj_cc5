@@ -1,12 +1,15 @@
-﻿using Infrastructure.Dto;
+﻿using Infrastructure.Dto.User;
 using Infrastructure.Model;
 
 namespace Domain.Repository
 {
     public interface IUserRepository
     {
-        public Task<LoginModel> login(LoginDto loginDto);
+        public Task<LoginModel> Login(LoginDTO loginDto);
 
-        public Task createUser(CreateUserDto userDto);
+        public Task<int> CreateUser(CreateUserDTO userDto);
+
+        public Task UpdatePassword(UpdatePasswordDTO updatePasswordDto);
+
     }
 }

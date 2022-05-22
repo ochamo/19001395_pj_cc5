@@ -1,4 +1,5 @@
-﻿using Infrastructure.Dto;
+﻿using Business.UseCase;
+using Infrastructure.Dto.User;
 using Infrastructure.Model;
 using Microsoft.IdentityModel.Tokens;
 using System.Configuration;
@@ -18,7 +19,7 @@ namespace _19001395_VentaCelulares_CC5_API.endpoint.User
             app.MapPost("/Login", Login);
         }
 
-        private static async Task<IResult> CreateAccount(CreateUserDto p, CreateUserUseCase createUserUseCase)
+        private static async Task<IResult> CreateAccount(CreateUserDTO p, CreateUserUseCase createUserUseCase)
         {
             var result = await createUserUseCase.Execute(p);
             if (result.Success)
@@ -39,8 +40,9 @@ namespace _19001395_VentaCelulares_CC5_API.endpoint.User
             {
                 var claims = new[]
                 {
-                    new Claim(ClaimTypes.NameIdentifier, result.Value.UserId.ToString()),
-                    new Claim(ClaimTypes.Email, result.Value.UserName),
+                    new Claim(ClaimTypes.NameIdentifier, result.Value.IdUsuario.ToString()),
+                    new Claim(ClaimTypes.Email, result.Value.Correo),
+                    new Claim(ClaimTypes.Role, result.Value.IdRol.ToString())
                 };
                 var token = new JwtSecurityToken(
                     issuer: configuration["Jwt:Issuer"],
@@ -54,7 +56,7 @@ namespace _19001395_VentaCelulares_CC5_API.endpoint.User
                     )
                 );
                 var tokenString = new JwtSecurityTokenHandler().WriteToken(token);
-                return Results.Ok(new AuthModel() { Jwt = tokenString, Xyz = result.Value.UserId });
+                return Results.Ok(new AuthModel() { Jwt = tokenString, Xyz = result.Value.IdUsuario, Yyz = result.Value.IdRol });
             }
             else
             {
@@ -62,6 +64,6 @@ namespace _19001395_VentaCelulares_CC5_API.endpoint.User
             }
 
         }
-
+        
     }
 }

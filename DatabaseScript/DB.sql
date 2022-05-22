@@ -24,6 +24,11 @@ CREATE PROCEDURE SP_InsertDepartamento(
             VALUES(DepId, DepName);
     END;
 
+CALL SP_InsertDepartamento(1, 'Guatemala');
+CALL SP_InsertDepartamento(2, 'Antigua Guatemala');
+CALL SP_InsertDepartamento(3, 'Alta verapaz');
+CALL SP_InsertDepartamento(4, 'Baja verapaz');
+
 CREATE TABLE Municipio(
     IdMuni INT AUTO_INCREMENT,
     IdDep INT NOT NULL,
@@ -47,6 +52,14 @@ CREATE PROCEDURE SP_InsertMuni(
             VALUES(DepId, MuniName);
     END;
 
+CALL SP_InsertMuni(1, 'Ciudad de Guatemala');
+CALL SP_InsertMuni(1, 'Mixco');
+CALL SP_InsertMuni(1, 'Chuarrancho');
+CALL SP_InsertMuni(2, 'Sacatepequez');
+CALL SP_InsertMuni(2, 'San lucas');
+CALL SP_InsertMuni(3, 'Cobán');
+CALL SP_InsertMuni(4, 'Salama');
+
 CREATE TABLE Roles(
     IdRol INT AUTO_INCREMENT,
     Nombre VARCHAR(100) NOT NULL,
@@ -63,6 +76,9 @@ BEGIN
     INSERT INTO Roles(Nombre) VALUES (Nom);
 END;
 
+CALL SP_InsertRole('Admin');
+CALL SP_InsertRole('Client');
+
 CREATE TABLE Usuario(
     IdUsuario INT AUTO_INCREMENT,
     IdRol INT NOT NULL,
@@ -72,16 +88,16 @@ CREATE TABLE Usuario(
     FechaNacimiento DATE NOT NULL,
     FechaCreacion DATETIME NOT NULL,
     Dpi VARCHAR(20) NOT NULL,
-    Pass VARCHAR(10) NOT NULL,
+    Pass VARCHAR(255) NOT NULL,
     PRIMARY KEY(IdUsuario),
     UNIQUE(Correo),
     UNIQUE(Dpi),
     FOREIGN KEY (IdRol) REFERENCES Roles(IdRol)
 );
 
-
+DROP TABLE IF EXISTS Direccion;
 CREATE TABLE Direccion(
-    IdDireccion INT,
+    IdDireccion INT AUTO_INCREMENT,
     IdUsuario INT NOT NULL,
     IdMunicipio INT NOT NULL,
     Zona INT,
@@ -92,10 +108,24 @@ CREATE TABLE Direccion(
     FOREIGN KEY (IdMunicipio) REFERENCES Municipio(IdMuni)
 );
 
+DROP PROCEDURE IF EXISTS SP_GetDireccion;
 CREATE PROCEDURE SP_GetDireccion(IN UserId INT)
 BEGIN
-    SELECT IdDireccion, IdUsuario, IdMunicipio, Zona, Avenida, Calle  FROM Direccion d WHERE IdUsuario = UserId;
+    SELECT d.IdDireccion,
+           d.IdUsuario,
+           d.IdMunicipio,
+           m.NombreMuni,
+           D2.NombreDep,
+           d.Zona,
+           d.Avenida,
+           d.Calle
+    FROM Direccion d
+    INNER JOIN Municipio m ON d.IdMunicipio = m.IdMuni
+    INNER JOIN Departamento D2 on m.IdDep = D2.IdDep
+        WHERE IdUsuario = UserId;
 END;
+
+CALL SP_GetDireccion(1);
 
 CREATE PROCEDURE SP_InsertDireccion(
 IN UsuarioId INT,
@@ -109,6 +139,7 @@ BEGIN
         VALUES(UsuarioId, Muni, Zon, Ave, Cal);
 END;
 
+CALL SP_InsertDireccion(1, 3, 12, '7 avenida', '6ta calle');
 
 CREATE PROCEDURE SP_InsertUsuario(
 IN Rol INT,
@@ -124,7 +155,8 @@ BEGIN
             VALUES(Rol, Corr, Noms, Apells, NOW(), Dni, MD5(Passs), FechaNaci);
 END;
 
-CREATE PROCEDURE SP_Get_Login(IN UserName VARCHAR(200), IN Pass VARCHAR(20))
+DROP PROCEDURE IF EXISTS SP_Get_Login;
+CREATE PROCEDURE SP_Get_Login(IN UserName VARCHAR(200), IN Pass VARCHAR(255))
     BEGIN
         SELECT * FROM Usuario U WHERE
             U.Correo = UserName AND U.Pass = MD5(Pass);

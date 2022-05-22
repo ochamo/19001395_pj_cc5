@@ -10,7 +10,7 @@ namespace Domain.Repository
 {
     public interface INitRepository
     {
-        public Task<NitModel> GetNit(GetNitDto getNitDto);
+        public Task<List<NitModel>> GetNit(GetNitDto getNitDto);
 
         public Task InsertNit(CreateNitDto createNitDto);
     }

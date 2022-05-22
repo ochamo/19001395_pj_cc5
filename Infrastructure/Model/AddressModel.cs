@@ -13,16 +13,22 @@ namespace Infrastructure.Model
 
         public int IdMunicipio { get; set; }
 
+        public string NombreMuni { get; set; }
+
+        public string NombreDep { get; set; }
+
         public int Zona { get; set; }
 
         public string Avenida { get; set; }
         public string Calle { get; set; }
 
-        public AddressModel(int idDireccion, int idUsuario, int idMunicipio, int zona, string avenida, string calle)
+        public AddressModel(int idDireccion, int idUsuario, int idMunicipio, string nombreMuni, string nombreDep, int zona, string avenida, string calle)
         {
             IdDireccion = idDireccion;
             IdUsuario = idUsuario;
             IdMunicipio = idMunicipio;
+            NombreMuni = nombreMuni;
+            NombreDep = nombreDep;
             Zona = zona;
             Avenida = avenida;
             Calle = calle;
