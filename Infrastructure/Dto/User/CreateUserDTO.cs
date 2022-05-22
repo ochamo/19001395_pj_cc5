@@ -4,15 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Dto
+namespace Infrastructure.Dto.User
 {
-    public class CreateUserDto
+    public class CreateUserDTO
     {
         public int Rol { get; set; }
 
         public string Corr { get; set; }
 
-        public string Nombs { get; set; }
+        public string Noms { get; set; }
+
+        public string Apells { get; set; }
 
         public DateTime FechaNaci { get; set; }
 
@@ -20,15 +22,15 @@ namespace Infrastructure.Dto
 
         public string Passs { get; set; }
 
-        public CreateUserDto(int rol, string corr, string nombs, DateTime fechaNaci, string dni, string passs)
+        public CreateUserDTO(int rol, string corr, string noms, string apells, DateTime fechaNaci, string dni, string passs)
         {
             Rol = rol;
             Corr = corr;
-            Nombs = nombs;
+            Noms = noms;
+            Apells = apells;
             FechaNaci = fechaNaci;
             Dni = dni;
             Passs = passs;
         }
-
     }
 }

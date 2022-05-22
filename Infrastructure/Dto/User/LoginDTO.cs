@@ -4,17 +4,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Dto
+namespace Infrastructure.Dto.User
 {
     public class LoginDTO
     {
         public string UserName { get; set; }
-        public string Password { get; set; }
+        public string Pass { get; set; }
 
-        public LoginDTO(string userName, string password)
+        public LoginDTO(string userName, string pass)
         {
             UserName = userName;
-            Password = password;
+            Pass = pass;
         }
     }
 }

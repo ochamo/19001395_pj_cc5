@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Dto
+namespace Infrastructure.Dto.Cellphone
 {
     public class CreateCellphoneDto
     {
@@ -14,7 +14,7 @@ namespace Infrastructure.Dto
         public string Descr { get; set; }
         public string Caract { get; set; }
         public string Model { get; set; }
-        public Decimal Preci { get; set; }
+        public decimal Preci { get; set; }
         public string NumSeri { get; set; }
         public string IsDispo { get; set; }
 

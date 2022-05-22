@@ -10,5 +10,7 @@ namespace Infrastructure.Model
     {
         public string Jwt { get; set; }
         public int Xyz { get; set; }
+
+        public int Yyz { get; set; }
     }
 }
