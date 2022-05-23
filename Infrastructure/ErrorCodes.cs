@@ -13,5 +13,7 @@ namespace Infrastructure
         public const string CouldNotCreateUser = "U0002";
         public const string UserNotFound = "U0003";
         public const string GeneralError = "G0001";
+        public const string LocalitiesNotLoaded = "L0001";
+        public const string CouldNotLoadAddresses = "AD0001";
     }
 }

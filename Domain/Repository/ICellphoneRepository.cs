@@ -6,6 +6,6 @@ namespace Domain.Repository
     {
         public Task CreateCellphone(CreateCellphoneDto cellphoneDto);
         // TODO
-        public Task GetCellPhone(GetCellPhoneDTO getCellPhoneDto);
+        public Task GetCellphoneDetail(GetCellphoneDetailDTO getCellPhoneDto);
     }
 }

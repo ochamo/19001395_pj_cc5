@@ -1,5 +1,5 @@
 ﻿using Domain.Repository;
-using Infrastructure.Dto;
+using Infrastructure.Dto.Nit;
 using Infrastructure.Model;
 using System;
 using System.Collections.Generic;

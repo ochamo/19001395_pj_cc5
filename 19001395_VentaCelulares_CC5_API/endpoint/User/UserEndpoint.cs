@@ -1,4 +1,5 @@
 ﻿using Business.UseCase;
+using Domain.UseCase.User;
 using Infrastructure.Dto.User;
 using Infrastructure.Model;
 using Microsoft.IdentityModel.Tokens;
@@ -8,7 +9,7 @@ using System.Security.Claims;
 using System.Text;
 using System.Text.Json;
 
-namespace _19001395_VentaCelulares_CC5_API.endpoint.User
+namespace _19001395_VentaCelulares_CC5_API.Endpoint.User
 {
     public static class UserEndpoint
     {
@@ -17,6 +18,7 @@ namespace _19001395_VentaCelulares_CC5_API.endpoint.User
         {
             app.MapPost("/CreateAccount", CreateAccount);
             app.MapPost("/Login", Login);
+            app.MapPut("/Password", UpdatePassword);
         }
 
         private static async Task<IResult> CreateAccount(CreateUserDTO p, CreateUserUseCase createUserUseCase)
@@ -27,6 +29,18 @@ namespace _19001395_VentaCelulares_CC5_API.endpoint.User
                 return Results.Ok();
             }
             else
+            {
+                return Results.Problem(JsonSerializer.Serialize(result.Error));
+            }
+        }
+
+        private static async Task<IResult> UpdatePassword(UpdatePasswordDTO p, UpdatePasswordUseCase updatePasswordUseCase)
+        {
+            var result = await updatePasswordUseCase.Execute(p);
+            if (result.Success)
+            {
+                return Results.Ok();
+            } else
             {
                 return Results.Problem(JsonSerializer.Serialize(result.Error));
             }

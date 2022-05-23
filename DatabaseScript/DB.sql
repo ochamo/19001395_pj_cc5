@@ -38,9 +38,11 @@ CREATE TABLE Municipio(
         REFERENCES Departamento(IdDep)
 );
 
-CREATE PROCEDURE SP_GetMunicipio()
+DROP PROCEDURE IF EXISTS SP_GetMunicipio;
+CREATE PROCEDURE SP_GetMunicipio(IN IdDepartamento INT)
     BEGIN
-        SELECT d.IdDep, d.IdMuni, d.NombreMuni FROM Municipio d;
+        SELECT d.IdDep, d.IdMuni, d.NombreMuni FROM Municipio d
+        WHERE IdDep = IdDepartamento;
     END;
 
 CREATE PROCEDURE SP_InsertMuni(
@@ -148,7 +150,7 @@ IN Noms VARCHAR(200),
 IN Apells VARCHAR(200),
 IN FechaNaci DATE,
 IN Dni VARCHAR(20),
-in Passs VARCHAR(20)
+in Passs VARCHAR(255)
 )
 BEGIN
     INSERT INTO Usuario(IdRol, Correo, Nombres, Apellidos, FechaCreacion, Dpi, Pass, FechaNacimiento)
@@ -161,6 +163,17 @@ CREATE PROCEDURE SP_Get_Login(IN UserName VARCHAR(200), IN Pass VARCHAR(255))
         SELECT * FROM Usuario U WHERE
             U.Correo = UserName AND U.Pass = MD5(Pass);
     END;
+
+DROP PROCEDURE IF EXISTS SP_UpdatePassword;
+CREATE PROCEDURE SP_UpdatePassword(
+    IN Passs VARCHAR(255),
+    IN UsuarioId INT
+)
+BEGIN
+    UPDATE Usuario SET Pass = Passs
+    WHERE IdUsuario = UsuarioId;
+END;
+
 
 CREATE TABLE Nit(
     IdNit INT NOT NULL AUTO_INCREMENT,
@@ -197,6 +210,10 @@ CREATE PROCEDURE SP_InsertEstatusEnvio(IN Descr VARCHAR(100))
 BEGIN
     INSERT INTO EstatusEnvio(Descripcion) VALUES (Descr);
 END;
+
+CALL SP_InsertEstatusEnvio('Pendiente envio');
+CALL SP_InsertEstatusEnvio('Enviado');
+CALL SP_InsertEstatusEnvio('Entregado');
 
 CREATE PROCEDURE SP_GetEstatusEnvio()
 BEGIN
@@ -279,6 +296,16 @@ IN UsuarioId INT
 BEGIN
     INSERT INTO CarritoUsuario(IdCelular, Cantidad, IdUsuario)
         VALUES(IdCelu, Cant, UsuarioId);
+END;
+
+DROP PROCEDURE IF EXISTS SP_DeleteItemCarrito;
+
+CREATE PROCEDURE SP_DeleteItemCarrito(
+    IN IdCel INT,
+    IN UsuarioId INT
+)
+BEGIN
+    DELETE FROM CarritoUsuario WHERE IdCelular = IdCel AND IdUsuario = UsuarioId;
 END;
 
 CREATE PROCEDURE SP_GetCarrito(
@@ -368,4 +395,4 @@ BEGIN
     SELECT F.IdFactura, C.Descripcion, C.NumSerie, C.Modelo FROM FilaFactura F
     INNER JOIN Celular C ON F.IdCelular = C.IdCelular
     WHERE F.IdFactura = FacturaId;
-END;|
+END;

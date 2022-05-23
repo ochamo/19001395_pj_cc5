@@ -1,4 +1,4 @@
-﻿using Infrastructure.Dto;
+﻿using Infrastructure.Dto.Address;
 using Infrastructure.Model;
 
 namespace Domain.Repository

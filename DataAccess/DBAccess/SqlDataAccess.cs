@@ -106,10 +106,16 @@ namespace DataAccess.DBAccess
 
             var item = new T();
 
-            while (reader.Read())
+            if (reader.HasRows)
             {
-                item = reader.MapToObject<T>();
+                while (reader.Read())
+                {
+                    item = reader.MapToObject<T>();
 
+                }
+            } else
+            {
+                return null;
             }
             return item;
 

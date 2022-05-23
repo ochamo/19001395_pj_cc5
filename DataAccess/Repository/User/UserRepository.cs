@@ -27,9 +27,6 @@ namespace DataAccess.Repository.User
             return result;
         }
 
-        public Task UpdatePassword(UpdatePasswordDTO updatePasswordDto)
-        {
-            throw new NotImplementedException();
-        }
+        public Task UpdatePassword(UpdatePasswordDTO updatePasswordDto) => Db.SaveData(Procedures.UpdatePassword, updatePasswordDto);
     }
 }

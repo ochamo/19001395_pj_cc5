@@ -1,12 +1,20 @@
-using _19001395_VentaCelulares_CC5_API.endpoint.User;
+using _19001395_VentaCelulares_CC5_API.Endpoint.Address;
+using _19001395_VentaCelulares_CC5_API.Endpoint.Locality;
+using _19001395_VentaCelulares_CC5_API.Endpoint.User;
+using _19001395_VentaCelulares_CC5_API.Util;
 using Business.UseCase;
 using DataAccess;
 using DataAccess.DBAccess;
+using DataAccess.Repository.Locality;
 using DataAccess.Repository.User;
 using Domain.Repository;
+using Domain.UseCase.Address;
+using Domain.UseCase.Locality;
+using Domain.UseCase.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using Microsoft.OpenApi.Models;
+using System.Security.Claims;
 using System.Text;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -64,12 +72,28 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme).AddJw
 });
 
 // services
-builder.Services.AddAuthorization();
+builder.Services.AddAuthorization(options =>
+{
+    options.AddPolicy(Policies.AdminPolicy, policy => {
+        policy.RequireClaim(claimType: ClaimTypes.Role, "1");
+        policy.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
+        });
+    options.AddPolicy(Policies.ClientPolicy, policy => {
+        policy.RequireClaim(claimType: ClaimTypes.Role, "2");
+        policy.AuthenticationSchemes.Add(JwtBearerDefaults.AuthenticationScheme);
+    });
+}); 
+
+
 builder.Services.AddSingleton<ISqlDataAccess, SqlDataAccess>();
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
+builder.Services.AddSingleton<ILocalityRepository, LocalityRepository>();
+builder.Services.AddSingleton<IAddressRepository, AddressRepository>();
 builder.Services.AddSingleton<CreateUserUseCase>();
+builder.Services.AddSingleton<UpdatePasswordUseCase>();
 builder.Services.AddSingleton<LoginUseCase>();
-
+builder.Services.AddSingleton<GetLocalitiesUseCase>();
+builder.Services.AddSingleton<GetAddressUseCase>();
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())
@@ -80,8 +104,12 @@ if (app.Environment.IsDevelopment())
 }
 
 app.UseCors(myAllowSpecificOrigins);
+app.UseAuthentication();
+app.UseAuthorization();
 
+app.ConfigureLocalityEndpoint();
 app.ConfigureUserEndpoint();
+app.ConfigureAddressEndpoint();
 
 
 app.Run();
