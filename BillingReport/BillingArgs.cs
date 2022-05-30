@@ -29,5 +29,9 @@ namespace BillingReport
             BillingItemModels = billingItemModels;
             TotalPurchase = totalPurchase;
         }
+
+        public BillingArgs()
+        {
+        }
     }
 }

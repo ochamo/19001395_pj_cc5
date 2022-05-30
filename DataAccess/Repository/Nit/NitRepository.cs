@@ -1,6 +1,6 @@
 ﻿using Domain.Repository;
 using Infrastructure.Dto.Nit;
-using Infrastructure.Model;
+using Infrastructure.Model.Nit;
 using System;
 using System.Collections.Generic;
 using System.Linq;

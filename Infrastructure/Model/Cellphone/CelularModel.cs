@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Model
+namespace Infrastructure.Model.Cellphone
 {
-    public  class CelularModel
+    public class CelularModel
     {
         public int IdCelular { get; set; }
         public int Cantidadd { get; set; }

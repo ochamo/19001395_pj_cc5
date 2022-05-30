@@ -1,4 +1,4 @@
-﻿using DbDataReaderMapper;
+﻿using DataAccess.DBAccess.Utils;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
 using System.Data;
@@ -56,7 +56,7 @@ namespace DataAccess.DBAccess
 
             while (reader.Read())
             {
-                var item = reader.MapToObject<T>();
+                var item = reader.MapDataToObject<T>();
                 list.Add(item);
             }
 
@@ -110,8 +110,7 @@ namespace DataAccess.DBAccess
             {
                 while (reader.Read())
                 {
-                    item = reader.MapToObject<T>();
-
+                    item = reader.MapDataToObject<T>();
                 }
             } else
             {
@@ -119,6 +118,26 @@ namespace DataAccess.DBAccess
             }
             return item;
 
+        }
+
+        public async Task<int> UpdateData<T>(string sql, T data, string connectionId = "Default")
+        {
+            using MySqlConnection mySqlConnection = new MySqlConnection(config.GetConnectionString(connectionId));
+            mySqlConnection.Open();
+            var cmd = new MySqlCommand();
+            cmd.Connection = mySqlConnection;
+            cmd.CommandText = sql;
+            cmd.CommandType = CommandType.StoredProcedure;
+            var props = typeof(T).GetProperties().ToList();
+            foreach (var property in props)
+            {
+                var propName = property.Name;
+                var propValue = property.GetValue(data);
+                cmd.Parameters.AddWithValue(propName, propValue);
+            }
+
+            var result = await cmd.ExecuteNonQueryAsync();
+            return result;
         }
     }
 }

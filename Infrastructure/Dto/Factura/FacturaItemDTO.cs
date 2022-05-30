@@ -4,11 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Dto
+namespace Infrastructure.Dto.Factura
 {
-    public class GetCelDto
+    public class FacturaItemDTO
     {
-        public int IdCel { get; set; }
-
     }
 }

@@ -2,6 +2,7 @@
 using Infrastructure;
 using Infrastructure.Dto.User;
 using Infrastructure.Model;
+using Infrastructure.Model.User;
 using Infrastructure.Result;
 
 namespace Business.UseCase

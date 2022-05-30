@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Model
+namespace Infrastructure.Model.Address
 {
     public class AddressModel
     {

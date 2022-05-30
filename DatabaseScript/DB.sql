@@ -110,8 +110,8 @@ CREATE TABLE Direccion(
     FOREIGN KEY (IdMunicipio) REFERENCES Municipio(IdMuni)
 );
 
-DROP PROCEDURE IF EXISTS SP_GetDireccion;
-CREATE PROCEDURE SP_GetDireccion(IN UserId INT)
+DROP PROCEDURE IF EXISTS SP_GetDireccions;
+CREATE PROCEDURE SP_GetDireccions(IN UserId INT)
 BEGIN
     SELECT d.IdDireccion,
            d.IdUsuario,
@@ -127,7 +127,25 @@ BEGIN
         WHERE IdUsuario = UserId;
 END;
 
-CALL SP_GetDireccion(1);
+DROP PROCEDURE IF EXISTS SP_GetDireccion;
+CREATE PROCEDURE SP_GetDireccion(IN DireccionId INT)
+BEGIN
+    SELECT d.IdDireccion,
+           d.IdUsuario,
+           d.IdMunicipio,
+           m.NombreMuni,
+           D2.NombreDep,
+           d.Zona,
+           d.Avenida,
+           d.Calle
+    FROM Direccion d
+    INNER JOIN Municipio m ON d.IdMunicipio = m.IdMuni
+    INNER JOIN Departamento D2 on m.IdDep = D2.IdDep
+        WHERE IdDireccion = DireccionId;
+END;
+
+
+CALL SP_GetDireccion(2);
 
 CREATE PROCEDURE SP_InsertDireccion(
 IN UsuarioId INT,
@@ -238,8 +256,6 @@ BEGIN
         VALUES(IdDirecc, IdEstatu, NOW());
 END;
 
-
-
 CREATE TABLE Celular(
     IdCelular INT AUTO_INCREMENT,
     Cantidad MEDIUMINT NOT NULL,
@@ -249,9 +265,10 @@ CREATE TABLE Celular(
     Modelo VARCHAR(100) NOT NULL,
     Precio DECIMAL(10,2) NOT NULL,
     NumSerie VARCHAR(50) NOT NULL,
-    IsDisponible VARCHAR(1) NOT NULL,
     PRIMARY KEY(IdCelular)
 );
+
+DROP PROCEDURE IF EXISTS SP_InsertCelular;
 
 CREATE PROCEDURE SP_InsertCelular(
 IN Cant INT,
@@ -260,12 +277,11 @@ In Descr VARCHAR(200),
 IN Caract TEXT,
 IN Model VARCHAR(100),
 IN Preci DECIMAL(10,2),
-IN NumSeri VARCHAR(50),
-IN IsDispo VARCHAR(1)
+IN NumSeri VARCHAR(50)
 )
 BEGIN
-    INSERT INTO Celular(Cantidad, Imagen, Descripcion, Caracteristicas, Modelo, Precio, NumSerie, IsDisponible)
-        VALUES(Cant, Img, Descr, Caract, Model, Preci, NumSeri, IsDispo);
+    INSERT INTO Celular(Cantidad, Imagen, Descripcion, Caracteristicas, Modelo, Precio, NumSerie)
+        VALUES(Cant, Img, Descr, Caract, Model, Preci, NumSeri);
 END;
 
 CREATE PROCEDURE SP_UpdateStockCelular(IN Cant INT, IN IdCel INT)
@@ -308,11 +324,19 @@ BEGIN
     DELETE FROM CarritoUsuario WHERE IdCelular = IdCel AND IdUsuario = UsuarioId;
 END;
 
+DROP PROCEDURE IF EXISTS SP_DeleteCarritoUsuario;
+
+CREATE PROCEDURE SP_DeleteCarritoUsuario(IN UsuarioId INT)
+BEGIN
+    DELETE FROM CarritoUsuario WHERE IdUsuario = UsuarioId;
+END;
+
+DROP PROCEDURE IF EXISTS SP_GetCarrito;
 CREATE PROCEDURE SP_GetCarrito(
 IN UsuarioId INT
 )
 BEGIN
-    SELECT IdUsuario, CA.IdCelular, CA.Cantidad, C.Imagen, C.Modelo FROM
+    SELECT IdUsuario, CA.IdCelular, CA.Cantidad, C.Imagen, C.Modelo, C.Precio FROM
         CarritoUsuario CA
         INNER JOIN Celular C
         WHERE IdUsuario = UsuarioId;
@@ -327,9 +351,10 @@ CREATE TABLE Pago(
     PRIMARY KEY (IdPago)
 );
 
+DROP PROCEDURE IF EXISTS SP_InsertPago;
 CREATE PROCEDURE SP_InsertPago(IN NumTarj VARCHAR(255), IN Tot DECIMAL(10, 2))
 BEGIN
-    INSERT INTO Pago(NumTarjeta, Total) VALUES(NumTarjeta, Tot);
+    INSERT INTO Pago(NumTarjeta, Total) VALUES(NumTarj, Tot);
 END;
 
 CREATE PROCEDURE SP_GetPago(IN PagoId INT)
@@ -363,9 +388,15 @@ BEGIN
         VALUES(UsuarioId, PagoId, PedidoId, NitN, NombreCli);
 END;
 
+
+DROP PROCEDURE IF EXISTS SP_GetFacturas;
 CREATE PROCEDURE SP_GetFacturas(IN UsuarioId INT)
 BEGIN
-    SELECT IdFactura, IdUsuario, IdPago, IdPedido, Nit, NombreCliente, FechaEmision FROM Factura WHERE IdUsuario = UsuarioId;
+    SELECT f.IdFactura, f.IdUsuario, p.total, f.IdPedido, f.Nit, f.NombreCliente, f.FechaEmision
+    FROM Factura f
+    INNER JOIN Pago p ON f.IdPago = p.IdPago
+    WHERE IdUsuario = UsuarioId;
+
 END;
 
 CREATE TABLE FilaFactura(

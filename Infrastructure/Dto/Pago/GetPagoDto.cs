@@ -4,7 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Dto
+namespace Infrastructure.Dto.Pago
 {
     public class GetPagoDto
     {

@@ -3,6 +3,7 @@ using Domain.Repository;
 using Infrastructure;
 using Infrastructure.Dto.Locality;
 using Infrastructure.Model;
+using Infrastructure.Model.Locality;
 using Infrastructure.Result;
 using System;
 using System.Collections.Generic;

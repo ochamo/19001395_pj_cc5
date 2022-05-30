@@ -1,5 +1,5 @@
 ﻿using Infrastructure.Dto.User;
-using Infrastructure.Model;
+using Infrastructure.Model.User;
 
 namespace Domain.Repository
 {

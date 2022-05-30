@@ -16,9 +16,8 @@ namespace Infrastructure.Dto.Cellphone
         public string Model { get; set; }
         public decimal Preci { get; set; }
         public string NumSeri { get; set; }
-        public string IsDispo { get; set; }
 
-        public CreateCellphoneDto(int cant, string img, string descr, string caract, string model, decimal preci, string numSeri, string isDispo)
+        public CreateCellphoneDto(int cant, string img, string descr, string caract, string model, decimal preci, string numSeri)
         {
             Cant = cant;
             Img = img;
@@ -27,7 +26,6 @@ namespace Infrastructure.Dto.Cellphone
             Model = model;
             Preci = preci;
             NumSeri = numSeri;
-            IsDispo = isDispo;
         }
 
         public CreateCellphoneDto()

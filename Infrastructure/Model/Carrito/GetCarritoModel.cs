@@ -4,24 +4,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Infrastructure.Model
+namespace Infrastructure.Model.Carrito
 {
-    public class CarritoModel
+    public class GetCarritoModel
     {
         public int IdUsuario { get; set; }
         public int IdCelular { get; set; }
+        public int Cantidad { get; set; }
         public string Imagen { get; set; }
-        public string Model { get; set;}
+        public string Modelo { get; set; }
 
-        public CarritoModel(int idUsuario, int idCelular, string imagen, string model)
+        public decimal Precio { get; set; }
+
+        public GetCarritoModel(int idUsuario, int idCelular, int cantidad, string imagen, string modelo)
         {
             IdUsuario = idUsuario;
             IdCelular = idCelular;
+            Cantidad = cantidad;
             Imagen = imagen;
-            Model = model;
+            Modelo = modelo;
         }
 
-        public CarritoModel()
+        public GetCarritoModel()
         {
         }
     }

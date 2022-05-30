@@ -1,6 +1,6 @@
 ﻿using Domain.Repository;
 using Infrastructure.Dto.User;
-using Infrastructure.Model;
+using Infrastructure.Model.User;
 using Microsoft.Extensions.Configuration;
 using MySql.Data.MySqlClient;
 using System;

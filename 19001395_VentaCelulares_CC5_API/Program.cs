@@ -2,14 +2,24 @@ using _19001395_VentaCelulares_CC5_API.Endpoint.Address;
 using _19001395_VentaCelulares_CC5_API.Endpoint.Locality;
 using _19001395_VentaCelulares_CC5_API.Endpoint.User;
 using _19001395_VentaCelulares_CC5_API.Util;
+using BillingReport;
 using Business.UseCase;
 using DataAccess;
 using DataAccess.DBAccess;
+using DataAccess.Repository.Carrito;
+using DataAccess.Repository.Cellphone;
+using DataAccess.Repository.Factura;
 using DataAccess.Repository.Locality;
+using DataAccess.Repository.Nit;
+using DataAccess.Repository.Payment;
+using DataAccess.Repository.Pedido;
 using DataAccess.Repository.User;
 using Domain.Repository;
 using Domain.UseCase.Address;
+using Domain.UseCase.Cellphone;
+using Domain.UseCase.Factura;
 using Domain.UseCase.Locality;
+using Domain.UseCase.Nit;
 using Domain.UseCase.User;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
@@ -89,11 +99,33 @@ builder.Services.AddSingleton<ISqlDataAccess, SqlDataAccess>();
 builder.Services.AddSingleton<IUserRepository, UserRepository>();
 builder.Services.AddSingleton<ILocalityRepository, LocalityRepository>();
 builder.Services.AddSingleton<IAddressRepository, AddressRepository>();
+builder.Services.AddSingleton<IBillingService, BillingService>();
+builder.Services.AddSingleton<ICarritoRepository, CarritoRepository>();
+builder.Services.AddSingleton<ICellphoneRepository, CellphoneRepository>();
+builder.Services.AddSingleton<IFacturaRepository, FacturaRepository>();
+builder.Services.AddSingleton<IPedidoRepository, PedidoRepository>();
+builder.Services.AddSingleton<INitRepository, NitRepository>();
+builder.Services.AddSingleton<IPaymentRepository, PaymentRepository>();
+
 builder.Services.AddSingleton<CreateUserUseCase>();
 builder.Services.AddSingleton<UpdatePasswordUseCase>();
 builder.Services.AddSingleton<LoginUseCase>();
+
 builder.Services.AddSingleton<GetLocalitiesUseCase>();
+
 builder.Services.AddSingleton<GetAddressUseCase>();
+builder.Services.AddSingleton<CreateAddressUseCase>();
+
+builder.Services.AddSingleton<CreateCellphoneUseCase>();
+builder.Services.AddSingleton<GetCellphoneUseCase>();
+builder.Services.AddSingleton<UpdateStockUseCase>();
+
+builder.Services.AddSingleton<CreateFacturaUseCase>();
+
+
+builder.Services.AddSingleton<CreateNitUseCase>();
+
+builder.Services.AddSingleton<GetNitsUseCase>();
 
 var app = builder.Build();
 if (app.Environment.IsDevelopment())

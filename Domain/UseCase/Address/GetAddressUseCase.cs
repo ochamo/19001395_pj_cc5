@@ -3,6 +3,7 @@ using Domain.Repository;
 using Infrastructure;
 using Infrastructure.Dto.Address;
 using Infrastructure.Model;
+using Infrastructure.Model.Address;
 using Infrastructure.Result;
 
 namespace Domain.UseCase.Address

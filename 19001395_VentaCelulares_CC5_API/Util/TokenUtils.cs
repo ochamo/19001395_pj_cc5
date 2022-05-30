@@ -1,4 +1,4 @@
-﻿using Infrastructure.Model;
+﻿using Infrastructure.Model.User;
 using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 
