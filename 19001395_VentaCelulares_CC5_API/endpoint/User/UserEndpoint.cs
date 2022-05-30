@@ -2,6 +2,7 @@
 using Domain.UseCase.User;
 using Infrastructure.Dto.User;
 using Infrastructure.Model;
+using Infrastructure.Model.User;
 using Microsoft.IdentityModel.Tokens;
 using System.Configuration;
 using System.IdentityModel.Tokens.Jwt;

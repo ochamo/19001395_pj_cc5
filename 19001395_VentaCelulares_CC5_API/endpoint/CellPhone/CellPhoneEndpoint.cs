@@ -1,6 +1,7 @@
 ﻿using _19001395_VentaCelulares_CC5_API.Util;
 using Domain.UseCase.Cellphone;
 using Infrastructure.Dto.Cellphone;
+using Microsoft.AspNetCore.Mvc;
 using System.Text.Json;
 
 namespace _19001395_VentaCelulares_CC5_API.Endpoint.CellPhone
@@ -11,7 +12,7 @@ namespace _19001395_VentaCelulares_CC5_API.Endpoint.CellPhone
         {
             app.MapPost("/Cellphone", CreateCellPhone).RequireAuthorization(Policies.AdminPolicy);
             app.MapPut("/Stock", UpdateCellPhone).RequireAuthorization(Policies.AdminPolicy);
-            app.MapPut("/Stock", UpdateCellPhone).RequireAuthorization(Policies.AdminPolicy);
+            app.MapGet("/Cellphone/{cellphoneId}", GetDetalleTelefono).RequireAuthorization(Policies.AdminPolicy);
         }
 
         private static async Task<IResult> CreateCellPhone(CreateCellphoneDto p, CreateCellphoneUseCase createCellPhoneUseCase)
@@ -42,7 +43,8 @@ namespace _19001395_VentaCelulares_CC5_API.Endpoint.CellPhone
 
         }
 
-        private static async Task<IResult> GetDetalleTelefono(GetCellphoneDetailDTO p, GetCellphoneUseCase getCellphoneUseCase)
+
+        private static async Task<IResult> GetDetalleTelefono(int cellphoneId, [FromBody] GetCellphoneDetailDTO p, GetCellphoneUseCase getCellphoneUseCase)
         {
             var result = await getCellphoneUseCase.Execute(p);
 

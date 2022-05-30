@@ -1,4 +1,6 @@
 using _19001395_VentaCelulares_CC5_API.Endpoint.Address;
+using _19001395_VentaCelulares_CC5_API.Endpoint.CellPhone;
+using _19001395_VentaCelulares_CC5_API.Endpoint.Factura;
 using _19001395_VentaCelulares_CC5_API.Endpoint.Locality;
 using _19001395_VentaCelulares_CC5_API.Endpoint.User;
 using _19001395_VentaCelulares_CC5_API.Util;
@@ -142,6 +144,8 @@ app.UseAuthorization();
 app.ConfigureLocalityEndpoint();
 app.ConfigureUserEndpoint();
 app.ConfigureAddressEndpoint();
+app.ConfigureFacturaEndpoint();
+app.ConfigureCellPhoneEndpoint();
 
 
 app.Run();
