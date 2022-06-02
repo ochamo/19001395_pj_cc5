@@ -110,6 +110,8 @@ CREATE TABLE Direccion(
     FOREIGN KEY (IdMunicipio) REFERENCES Municipio(IdMuni)
 );
 
+ALTER TABLE Direccion ADD COLUMN NombreDir VARCHAR(255) NOT NULL;
+
 DROP PROCEDURE IF EXISTS SP_GetDireccions;
 CREATE PROCEDURE SP_GetDireccions(IN UserId INT)
 BEGIN
@@ -118,6 +120,7 @@ BEGIN
            d.IdMunicipio,
            m.NombreMuni,
            D2.NombreDep,
+           d.NombreDir,
            d.Zona,
            d.Avenida,
            d.Calle
@@ -132,6 +135,7 @@ CREATE PROCEDURE SP_GetDireccion(IN DireccionId INT)
 BEGIN
     SELECT d.IdDireccion,
            d.IdUsuario,
+           d.NombreDir,
            d.IdMunicipio,
            m.NombreMuni,
            D2.NombreDep,
@@ -145,18 +149,18 @@ BEGIN
 END;
 
 
-CALL SP_GetDireccion(2);
-
+DROP PROCEDURE IF EXISTS SP_InsertDireccion;
 CREATE PROCEDURE SP_InsertDireccion(
 IN UsuarioId INT,
+IN DirNom VARCHAR(255),
 IN Muni INT,
 IN Zon INT,
 IN Ave VARCHAR(255),
 IN Cal VARCHAR(255)
 )
 BEGIN
-    INSERT INTO Direccion (IdUsuario, IdMunicipio, Zona, Avenida, Calle)
-        VALUES(UsuarioId, Muni, Zon, Ave, Cal);
+    INSERT INTO Direccion (IdUsuario, IdMunicipio, NombreDir, Zona, Avenida, Calle)
+        VALUES(UsuarioId, Muni, DirNom, Zon, Ave, Cal);
 END;
 
 CALL SP_InsertDireccion(1, 3, 12, '7 avenida', '6ta calle');
@@ -174,6 +178,9 @@ BEGIN
     INSERT INTO Usuario(IdRol, Correo, Nombres, Apellidos, FechaCreacion, Dpi, Pass, FechaNacimiento)
             VALUES(Rol, Corr, Noms, Apells, NOW(), Dni, MD5(Passs), FechaNaci);
 END;
+
+
+CALL SP_InsertUsuario(1, 'ottoc904@gmail.com', 'Juan', 'Perez', NOW(), '12345678', 'password123');
 
 DROP PROCEDURE IF EXISTS SP_Get_Login;
 CREATE PROCEDURE SP_Get_Login(IN UserName VARCHAR(200), IN Pass VARCHAR(255))
@@ -219,7 +226,7 @@ END;
 
 
 CREATE TABLE EstatusEnvio(
-    IdEstatusEnvio INT NOT NULL AUTO_INCREMENT,
+    IdEstatusEnvio INT AUTO_INCREMENT,
     Descripcion VARCHAR(100) NOT NULL,
     PRIMARY KEY(IdEstatusEnvio)
 );
@@ -247,6 +254,7 @@ CREATE TABLE Pedido(
     FOREIGN KEY (IdEstatus) REFERENCES EstatusEnvio(IdEstatusEnvio)
 );
 
+DROP PROCEDURE IF EXISTS  SP_InsertPedido;
 CREATE PROCEDURE SP_InsertPedido(
     IN IdDirecc INT,
     IN IdEstatu INT
@@ -254,6 +262,7 @@ CREATE PROCEDURE SP_InsertPedido(
 BEGIN
     INSERT INTO Pedido(IdDireccion, IdEstatus, FechaCreacion)
         VALUES(IdDirecc, IdEstatu, NOW());
+    SELECT LAST_INSERT_ID();
 END;
 
 CREATE TABLE Celular(
@@ -284,14 +293,21 @@ BEGIN
         VALUES(Cant, Img, Descr, Caract, Model, Preci, NumSeri);
 END;
 
+DROP PROCEDURE IF EXISTS SP_UpdateStockCelular;
+
 CREATE PROCEDURE SP_UpdateStockCelular(IN Cant INT, IN IdCel INT)
 BEGIN
-    UPDATE Celular SET Cantidad = Cant WHERE IdCelular = IdCel;
+    UPDATE Celular SET Cantidad = Cantidad + Cant WHERE IdCelular = IdCel;
 END;
 
 CREATE PROCEDURE SP_GetCelularDet(IN IdCel INT)
 BEGIN
     SELECT * FROM Celular WHERE IdCelular = IdCel;
+END;
+
+CREATE PROCEDURE SP_GetCelulares()
+BEGIN
+    SELECT * FROM Celular;
 END;
 
 CREATE TABLE CarritoUsuario(
@@ -355,6 +371,7 @@ DROP PROCEDURE IF EXISTS SP_InsertPago;
 CREATE PROCEDURE SP_InsertPago(IN NumTarj VARCHAR(255), IN Tot DECIMAL(10, 2))
 BEGIN
     INSERT INTO Pago(NumTarjeta, Total) VALUES(NumTarj, Tot);
+    SELECT LAST_INSERT_ID();
 END;
 
 CREATE PROCEDURE SP_GetPago(IN PagoId INT)
@@ -376,6 +393,7 @@ CREATE TABLE Factura(
     FOREIGN KEY (IdUsuario) REFERENCES Usuario(IdUsuario)
 );
 
+DROP PROCEDURE IF EXISTS SP_InsertFactura;
 CREATE PROCEDURE SP_InsertFactura(
 IN UsuarioId INT,
 IN PagoId INT,
@@ -386,6 +404,7 @@ IN NombreCli VARCHAR(200)
 BEGIN
     INSERT INTO Factura(IdUsuario, IdPago, IdPedido, Nit, NombreCliente)
         VALUES(UsuarioId, PagoId, PedidoId, NitN, NombreCli);
+    SELECT LAST_INSERT_ID();
 END;
 
 
@@ -410,6 +429,8 @@ CREATE TABLE FilaFactura(
     FOREIGN KEY (IdCelular) REFERENCES Celular(IdCelular)
 );
 
+DROP PROCEDURE IF EXISTS SP_InsertFilaFactura;
+
 CREATE PROCEDURE SP_InsertFilaFactura(
 IN FacturaId INT,
 IN CelularId INT,
@@ -419,6 +440,7 @@ IN Prec DECIMAL(10, 2)
 BEGIN
     INSERT INTO FilaFactura(IdFactura, IdCelular, Cantidad, Precio)
         VALUES(FacturaId, CelularId, Cant, Prec);
+    SELECT LAST_INSERT_ID();
 END;
 
 CREATE PROCEDURE SP_GetFilaFactura(IN FacturaId INT)

@@ -22,7 +22,7 @@ namespace Infrastructure.Dto.User
 
         public string Passs { get; set; }
 
-        public CreateUserDTO(int rol, string corr, string noms, string apells, DateTime fechaNaci, string dni, string passs)
+        public CreateUserDTO(string corr, string noms, string apells, DateTime fechaNaci, string dni, string passs, int rol = 2)
         {
             Rol = rol;
             Corr = corr;

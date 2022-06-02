@@ -34,6 +34,7 @@ namespace _19001395_VentaCelulares_CC5_API.Endpoint.Address
         private static async Task<IResult> CreateAddress([FromHeader(Name = "Authorization")] string authorization, CreateAddressDto createAddressDto, CreateAddressUseCase createAddressUseCase)
         {
             var token = TokenUtils.GetTokenClaims(authorization);
+            createAddressDto.UsuarioId = token.UserId;
             var result = await createAddressUseCase.Execute(createAddressDto);
 
             if (result.Success)

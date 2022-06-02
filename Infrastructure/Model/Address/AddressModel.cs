@@ -11,7 +11,9 @@ namespace Infrastructure.Model.Address
         public int IdDireccion { get; set; }
         public int IdUsuario { get; set; }
 
-        public int IdMunicipio { get; set; }
+        public int IdMunicipio { get; set; } 
+
+        public string NombreDir { get; set; }
 
         public string NombreMuni { get; set; }
 
@@ -22,11 +24,12 @@ namespace Infrastructure.Model.Address
         public string Avenida { get; set; }
         public string Calle { get; set; }
 
-        public AddressModel(int idDireccion, int idUsuario, int idMunicipio, string nombreMuni, string nombreDep, int zona, string avenida, string calle)
+        public AddressModel(int idDireccion, int idUsuario, int idMunicipio, string nombreDir, string nombreMuni, string nombreDep, int zona, string avenida, string calle)
         {
             IdDireccion = idDireccion;
             IdUsuario = idUsuario;
             IdMunicipio = idMunicipio;
+            NombreDir = nombreDir;
             NombreMuni = nombreMuni;
             NombreDep = nombreDep;
             Zona = zona;

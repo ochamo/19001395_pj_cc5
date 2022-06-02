@@ -2,6 +2,7 @@ using _19001395_VentaCelulares_CC5_API.Endpoint.Address;
 using _19001395_VentaCelulares_CC5_API.Endpoint.CellPhone;
 using _19001395_VentaCelulares_CC5_API.Endpoint.Factura;
 using _19001395_VentaCelulares_CC5_API.Endpoint.Locality;
+using _19001395_VentaCelulares_CC5_API.Endpoint.Nit;
 using _19001395_VentaCelulares_CC5_API.Endpoint.User;
 using _19001395_VentaCelulares_CC5_API.Util;
 using BillingReport;
@@ -121,6 +122,7 @@ builder.Services.AddSingleton<CreateAddressUseCase>();
 builder.Services.AddSingleton<CreateCellphoneUseCase>();
 builder.Services.AddSingleton<GetCellphoneUseCase>();
 builder.Services.AddSingleton<UpdateStockUseCase>();
+builder.Services.AddSingleton<GetCellphonesUseCase>();
 
 builder.Services.AddSingleton<CreateFacturaUseCase>();
 
@@ -143,6 +145,7 @@ app.UseAuthorization();
 
 app.ConfigureLocalityEndpoint();
 app.ConfigureUserEndpoint();
+app.ConfigureNitEndpoint();
 app.ConfigureAddressEndpoint();
 app.ConfigureFacturaEndpoint();
 app.ConfigureCellPhoneEndpoint();

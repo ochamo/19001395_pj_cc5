@@ -81,8 +81,16 @@ namespace DataAccess.DBAccess
                 cmd.Parameters.AddWithValue(propName, propValue);
             }
 
-            await cmd.ExecuteNonQueryAsync();
-            return (int)cmd.LastInsertedId;
+            int result = 0;
+            var reader = await cmd.ExecuteReaderAsync();
+
+            while (reader.Read())
+            {
+                result = Convert.ToInt32(reader[0]);
+            }
+
+            return result;
+            //return (int)cmd.LastInsertedId;
 
         }
 

@@ -19,7 +19,7 @@ namespace DataAccess.Repository.Factura
         }
 
         public Task<int> CreateFactura(CreateFacturaDTO createFacturaDTO) => Db.SaveData(Procedures.CreateFactura, createFacturaDTO);
-        public Task CreateFilasFactura(CreateFacturaFilaDto createFacturaFilaDto) => Db.SaveData(Procedures.CreateFactura, createFacturaFilaDto);
+        public Task CreateFilasFactura(CreateFacturaFilaDto createFacturaFilaDto) => Db.SaveData(Procedures.CreateFilasFactura, createFacturaFilaDto);
         public Task<List<GetFilaModel>> GetFilasFactura(GetFilaFacturaDto getFilaFacturaDto) =>
             Db.LoadData<GetFilaModel, GetFilaFacturaDto>(Procedures.GetFilasFactura, getFilaFacturaDto);
     }

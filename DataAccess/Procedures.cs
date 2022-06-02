@@ -32,6 +32,7 @@ namespace DataAccess
         public const string GetFacturas = "SP_GetFacturas";
         public const string CreateFilasFactura = "SP_InsertFilaFactura";
         public const string GetFilasFactura = "SP_GetFilaFactura";
+        public const string GetCellphones = "SP_GetCelulares";
         public const string CreatePedido = "SP_InsertPedido";
     }
 }

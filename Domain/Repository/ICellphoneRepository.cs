@@ -7,8 +7,11 @@ namespace Domain.Repository
     {
         public Task CreateCellphone(CreateCellphoneDto cellphoneDto);
         
-        public Task<List<CelularModel>> GetCellphoneDetail(GetCellphoneDetailDTO getCellPhoneDto);
+        public Task<CelularModel> GetCellphoneDetail(GetCellphoneDetailDTO getCellPhoneDto);
 
         public Task UpdateStockCellphone(UpdateStockDto updateStockDto);
+
+        public Task<List<CelularModel>> GetCellphones();
+
     }
 }

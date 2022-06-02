@@ -20,9 +20,10 @@ namespace DataAccess.Repository.Cellphone
 
         public Task CreateCellphone(CreateCellphoneDto cellphoneDto) => Db.SaveData(Procedures.CreateCellphone, cellphoneDto);
 
-        public Task<List<CelularModel>> GetCellphoneDetail(GetCellphoneDetailDTO getCellPhoneDto) => Db
-            .Single<List<CelularModel>, GetCellphoneDetailDTO>(Procedures.GetCellPhoneDetail, getCellPhoneDto);
+        public Task<CelularModel> GetCellphoneDetail(GetCellphoneDetailDTO getCellPhoneDto) => Db
+            .Single<CelularModel, GetCellphoneDetailDTO>(Procedures.GetCellPhoneDetail, getCellPhoneDto);
 
+        public Task<List<CelularModel>> GetCellphones() => Db.LoadData<CelularModel, dynamic>(Procedures.GetCellphones, new { });
         public Task UpdateStockCellphone(UpdateStockDto updateStockDto) => Db.SaveData(Procedures.UpdateStockCellphone, updateStockDto);
     }
 }

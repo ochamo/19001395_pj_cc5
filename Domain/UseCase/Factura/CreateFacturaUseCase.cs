@@ -20,17 +20,15 @@ namespace Domain.UseCase.Factura
         private readonly IPedidoRepository PedidoRepository;
         private readonly IFacturaRepository FacturaRepository;
         private readonly IBillingService BillingService;
-        private readonly ICarritoRepository CarritoRepository;
         private readonly IPaymentRepository PaymentRepository;
         private readonly IAddressRepository AddressRepository;
 
-        public CreateFacturaUseCase(ICellphoneRepository cellPhoneRepository, IPedidoRepository pedidoRepository, IFacturaRepository facturaRepository, IBillingService billingService, ICarritoRepository carritoRepository, IPaymentRepository paymentRepository, IAddressRepository addressRepository)
+        public CreateFacturaUseCase(ICellphoneRepository cellPhoneRepository, IPedidoRepository pedidoRepository, IFacturaRepository facturaRepository, IBillingService billingService, IPaymentRepository paymentRepository, IAddressRepository addressRepository)
         {
             CellPhoneRepository = cellPhoneRepository;
             PedidoRepository = pedidoRepository;
             FacturaRepository = facturaRepository;
             BillingService = billingService;
-            CarritoRepository = carritoRepository;
             PaymentRepository = paymentRepository;
             AddressRepository = addressRepository;
         }
@@ -39,8 +37,7 @@ namespace Domain.UseCase.Factura
         {
             try
             {
-                var carrito = await CarritoRepository.GetCarrito(new GetCarritoDto(p.UsuarioId));
-
+                var item = await CellPhoneRepository.GetCellphoneDetail(new GetCellphoneDetailDTO(p.ItemToPurchase));
                 var pedidoId = await PedidoRepository.CreatePedido(p.PedidoInfo);
 
                 var pagoId = await PaymentRepository.CreatePayment(p.PagoInfo);
@@ -49,19 +46,16 @@ namespace Domain.UseCase.Factura
 
                 var facturaId = await FacturaRepository.CreateFactura(createFacturaDto);
 
-                foreach (var item in carrito)
+                
+                await CellPhoneRepository.UpdateStockCellphone(new UpdateStockDto(-1, item.IdCelular));
+                await FacturaRepository.CreateFilasFactura(new CreateFacturaFilaDto()
                 {
-                    await CellPhoneRepository.UpdateStockCellphone(new UpdateStockDto(item.Cantidad, item.IdCelular));
-                    await FacturaRepository.CreateFilasFactura(new CreateFacturaFilaDto()
-                    {
-                        Cant = item.Cantidad,
-                        CelularId = item.IdCelular,
-                        FacturaId = facturaId,
-                        Prec = item.Precio
-                    });
-                }
+                    Cant = 1,
+                    CelularId = item.IdCelular,
+                    FacturaId = facturaId,
+                    Prec = item.Precio
+                });
 
-                await CarritoRepository.DeleteCarrito(new DeleteCarritoUsuarioDto(p.UsuarioId));
                 var address = await AddressRepository.GetAddress(new GetSingleAddressDto(p.PedidoInfo.IdDirecc));
                 var billingArgs = new BillingArgs()
                 {
@@ -70,12 +64,14 @@ namespace Domain.UseCase.Factura
                     ClientBillingName = p.NombreCli,
                     ClientEmail = p.Email,
                     DeliveryAddress = $"{address.NombreDep}, {address.NombreMuni}, {address.Avenida}, {address.Calle}, Z. {address.Zona}",
-                    TotalPurchase = p.PagoInfo.Total,
-                    BillingItemModels = carrito.Select(p => new BillingItemModel(p.Modelo, p.Cantidad, p.Precio)).ToList()
+                    TotalPurchase = p.PagoInfo.Tot,
+                    BillingItemModels = new List<BillingItemModel>()
+                    {
+                        new BillingItemModel(item.Modelo, 1, item.Precio)
+                    }
                 };
 
                 BillingService.SendBill(billingArgs);
-
 
                 return Result.Ok();
             } catch(Exception ex)

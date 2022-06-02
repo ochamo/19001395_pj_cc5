@@ -8,14 +8,14 @@ namespace Infrastructure.Dto.Pago
 {
     public class CreatePagoDto
     {
-        public string NumTarjeta { get; set; }
+        public string NumTarj { get; set; }
 
-        public decimal Total { get; set; }
+        public decimal Tot { get; set; }
 
         public CreatePagoDto(string numTarjeta, decimal total)
         {
-            NumTarjeta = numTarjeta;
-            Total = total;
+            NumTarj = numTarjeta;
+            Tot = total;
         }
 
         public CreatePagoDto()

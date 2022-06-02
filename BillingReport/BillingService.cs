@@ -93,7 +93,7 @@ namespace BillingReport
             stringBuilder.AppendLine("<tfoot>");
             stringBuilder.AppendLine("<tr>");
             stringBuilder.AppendLine("<td colspan='3'><b>Total Compra:</b></td>");
-            stringBuilder.AppendLine($"<td  colspan='1' align='center'><b>Q {args.TotalPurchase}</b></td>");
+            stringBuilder.AppendLine($"<td  colspan='1' align='center'><b>Q {decimal.Round(args.TotalPurchase, 2)}</b></td>");
             stringBuilder.AppendLine("</tr>");
             stringBuilder.AppendLine("</tfoot>");
             stringBuilder.AppendLine("</table>");

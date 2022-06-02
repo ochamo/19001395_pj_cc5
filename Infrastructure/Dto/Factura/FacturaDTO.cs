@@ -1,5 +1,6 @@
 ﻿using Infrastructure.Dto.Pago;
 using Infrastructure.Dto.Pedido;
+using Infrastructure.Model.Carrito;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,9 @@ namespace Infrastructure.Dto.Factura
 
         public string Email { get; set; }
 
-        public FacturaDTO(CreatePagoDto pagoInfo, CreatePedidoDto pedidoInfo, string nitN, string nombreCli, int usuarioId, string email)
+        public int ItemToPurchase { get; set; }
+
+        public FacturaDTO(CreatePagoDto pagoInfo, CreatePedidoDto pedidoInfo, string nitN, string nombreCli, int usuarioId, string email, int itemToPurchase)
         {
             PagoInfo = pagoInfo;
             PedidoInfo = pedidoInfo;
@@ -30,6 +33,7 @@ namespace Infrastructure.Dto.Factura
             NombreCli = nombreCli;
             UsuarioId = usuarioId;
             Email = email;
+            ItemToPurchase = itemToPurchase;
         }
 
         public FacturaDTO()

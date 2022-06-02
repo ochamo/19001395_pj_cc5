@@ -13,7 +13,7 @@ using System.Threading.Tasks;
 
 namespace Domain.UseCase.Cellphone
 {
-    public class GetCellphoneUseCase: BaseUseCase<GetCellphoneDetailDTO, Result<List<CelularModel>>>
+    public class GetCellphoneUseCase: BaseUseCase<GetCellphoneDetailDTO, Result<CelularModel>>
     {
         private readonly ICellphoneRepository CellphoneRepository;
 
@@ -22,7 +22,7 @@ namespace Domain.UseCase.Cellphone
             CellphoneRepository = cellphoneRepository;
         }
 
-        public override async Task<Result<List<CelularModel>>> Execute(GetCellphoneDetailDTO p)
+        public override async Task<Result<CelularModel>> Execute(GetCellphoneDetailDTO p)
         {
             try
             {
@@ -30,7 +30,7 @@ namespace Domain.UseCase.Cellphone
                 return Result.Ok(result);
             } catch(Exception ex)
             {
-                return Result.Fail<List<CelularModel>>(new ErrorModel(ErrorCodes.GeneralError));
+                return Result.Fail<CelularModel>(new ErrorModel(ErrorCodes.GeneralError));
             }
         }
     }
