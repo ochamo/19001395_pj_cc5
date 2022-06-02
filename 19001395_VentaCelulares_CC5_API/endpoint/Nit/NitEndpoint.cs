@@ -13,6 +13,7 @@ namespace _19001395_VentaCelulares_CC5_API.Endpoint.Nit
         {
             app.MapGet("/Nit", GetNits).RequireAuthorization(Policies.ClientPolicy);
             app.MapPost("/Nit", CreateNit).RequireAuthorization(Policies.ClientPolicy);
+            app.MapPut("/Nit", UpdateNit).RequireAuthorization(Policies.ClientPolicy);
         }
 
         private static async Task<IResult> GetNits([FromHeader(Name = "Authorization")] string authorization, GetNitsUseCase getNitsUseCase)
@@ -37,6 +38,20 @@ namespace _19001395_VentaCelulares_CC5_API.Endpoint.Nit
             {
                 return Results.Ok();
             } else {
+                return Results.Problem(JsonSerializer.Serialize(result.Error));
+            }
+        }
+
+        private static async Task<IResult> UpdateNit([FromHeader(Name = "Authorization")] string authorization, UpdateNitDto updateNitDto, UpdateNitUseCase updateNitUseCase)
+        {
+            var token = TokenUtils.GetTokenClaims(authorization);
+            var result = await updateNitUseCase.Execute(updateNitDto);
+            if (result.Success)
+            {
+                return Results.Ok();
+            }
+            else
+            {
                 return Results.Problem(JsonSerializer.Serialize(result.Error));
             }
         }

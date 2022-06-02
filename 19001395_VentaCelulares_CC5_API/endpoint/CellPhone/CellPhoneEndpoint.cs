@@ -11,7 +11,8 @@ namespace _19001395_VentaCelulares_CC5_API.Endpoint.CellPhone
         public static void ConfigureCellPhoneEndpoint(this WebApplication app)
         {
             app.MapPost("/Cellphone", CreateCellPhone).RequireAuthorization(Policies.AdminPolicy);
-            app.MapPut("/Stock", UpdateCellPhone).RequireAuthorization(Policies.AdminPolicy);
+            app.MapPut("/Stock", UpdateCellPhoneStock).RequireAuthorization(Policies.AdminPolicy);
+            app.MapPut("/Cellphone", UpdateCellphone).RequireAuthorization(Policies.AdminPolicy);
             app.MapGet("/Cellphone/{cellphoneId}", GetDetalleTelefono).RequireAuthorization(Policies.AdminPolicy);
             app.MapGet("/Cellphone/", GetTelefonos).RequireAuthorization();
         }
@@ -30,7 +31,7 @@ namespace _19001395_VentaCelulares_CC5_API.Endpoint.CellPhone
 
         }
 
-        private static async Task<IResult> UpdateCellPhone(UpdateStockDto p, UpdateStockUseCase updateStockUseCase)
+        private static async Task<IResult> UpdateCellPhoneStock(UpdateStockDto p, UpdateStockUseCase updateStockUseCase)
         {
             var result = await updateStockUseCase.Execute(p);
 
@@ -38,6 +39,22 @@ namespace _19001395_VentaCelulares_CC5_API.Endpoint.CellPhone
             {
                 return Results.Ok();
             } else
+            {
+                return Results.Problem(JsonSerializer.Serialize(result.Error));
+            }
+
+        }
+
+
+        private static async Task<IResult> UpdateCellphone(UpdateCellphoneDto p, UpdateCellphoneUseCase updateCellphoneUseCase)
+        {
+            var result = await updateCellphoneUseCase.Execute(p);
+
+            if (result.Success)
+            {
+                return Results.Ok();
+            }
+            else
             {
                 return Results.Problem(JsonSerializer.Serialize(result.Error));
             }

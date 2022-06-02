@@ -122,13 +122,14 @@ builder.Services.AddSingleton<CreateAddressUseCase>();
 builder.Services.AddSingleton<CreateCellphoneUseCase>();
 builder.Services.AddSingleton<GetCellphoneUseCase>();
 builder.Services.AddSingleton<UpdateStockUseCase>();
+builder.Services.AddSingleton<UpdateCellphoneUseCase>();
 builder.Services.AddSingleton<GetCellphonesUseCase>();
 
 builder.Services.AddSingleton<CreateFacturaUseCase>();
 
 
 builder.Services.AddSingleton<CreateNitUseCase>();
-
+builder.Services.AddSingleton<UpdateNitUseCase>();
 builder.Services.AddSingleton<GetNitsUseCase>();
 
 var app = builder.Build();
